@@ -66,7 +66,7 @@ class MindMapApp(ctk.CTk):
         self.canvas = tk.Canvas(self, bg="#1e1e24", highlightthickness=0)
         self.canvas.pack(fill="both", expand=True, padx=10, pady=5)
 
-        # 🌐 NEW CANVAS BINDINGS FOR PANNING: හිස් තැනක් ක්ලික් කරලා ඇදීමේදී සිදුවන ක්‍රියාවලිය
+        # 🌐 NEW CANVAS BINDINGS FOR PANNING:
         self.canvas.bind("<Button-1>", self.start_pan)
         self.canvas.bind("<B1-Motion>", self.drag_pan)
 
@@ -75,10 +75,10 @@ class MindMapApp(ctk.CTk):
 
     # 🌐 NEW PANNING LOGIC
     def start_pan(self, event):
-        # යූසර් ක්ලික් කලේ හිස් තැනක්ද නැත්නම් Node එකක් උඩද කියලා පරික්ෂා කරනවා
+      
         clicked_item = self.canvas.find_withtag("current")
         if not clicked_item:
-            # හිස් තැනක් නම් මවුස් කර්සර් එක 'fleur' (හතර අතට විහිදුණු ඊතල) ලකුණට හරවනවා
+            
             self.canvas.config(cursor="fleur")
             self.canvas.scan_mark(event.x, event.y)
             self.is_panning = True
@@ -86,10 +86,10 @@ class MindMapApp(ctk.CTk):
             self.is_panning = False
 
     def drag_pan(self, event):
-        # හිස් තැනක් ක්ලික් කරලා ඩ්‍රැග් කරනවා නම් මුළු Canvas එකම මවුස් එකත් එක්ක හොලවනවා
+        
         if hasattr(self, 'is_panning') and self.is_panning:
             self.canvas.scan_dragto(event.x, event.y, gain=1)
-            # මවුස් එක අතඇරියම කර්සර් එක සාමාන්‍ය තත්ත්වයට පත් කරනවා
+           
             self.canvas.bind("<ButtonRelease-1>", lambda e: self.canvas.config(cursor=""))
 
     def create_node_element(self, x, y, text, is_root=False, custom_id=None, color=None, bg_color=None):
@@ -119,17 +119,17 @@ class MindMapApp(ctk.CTk):
             "bg_color": actual_bg
         }
 
-        # Event Bindings for Individual Nodes (පැටලෙන්නේ නැති වෙන්න override කරනවා)
+        # Event Bindings for Individual Nodes 
         self.canvas.tag_bind(tag, "<Button-1>", lambda event, nid=node_id: self.on_node_click(event, nid))
         self.canvas.tag_bind(tag, "<B1-Motion>", lambda event, nid=node_id: self.on_node_drag(event, nid))
         self.canvas.tag_bind(tag, "<Button-3>", lambda event, nid=node_id: self.show_context_menu(event, nid))
 
     def add_node(self):
         if self.is_locked:
-            messagebox.showwarning("Locked", "Mind Map එක දැනට ලොක් කර ඇත! වෙනස් කිරීමට ප්‍රථම Unlock කරන්න.")
+            messagebox.showwarning("Locked", "Mind Map It is currently locked! Unlock it before changing it.")
             return
         
-        # සැබෑ Canvas coordinates (Scroll/Pan වෙලා තිබ්බත් මැදටම හැදෙන්න සකස් කිරීම)
+       
         cx = self.canvas.canvasx(600)
         cy = self.canvas.canvasy(375)
         x = cx + random.randint(-150, 150)
@@ -142,7 +142,7 @@ class MindMapApp(ctk.CTk):
     def on_node_click(self, event, node_id):
         if self.is_locked: return
         self.selected_node = node_id
-        # Scroll වෙලා තියෙන ප්‍රමාණයත් එක්ක සැබෑ ලෝකල් මැප් ලොකේෂන් එක ගන්නවා
+       
         self.start_x = self.canvas.canvasx(event.x)
         self.start_y = self.canvas.canvasy(event.y)
 
@@ -165,7 +165,7 @@ class MindMapApp(ctk.CTk):
 
     def show_context_menu(self, event, node_id):
         if self.is_locked:
-            messagebox.showinfo("Locked", "Mind Map එක දැනට Lock කර ඇති බැවින් වෙනස්කම් සිදුකල නොහැක.")
+            messagebox.showinfo("Locked", "Mind Map It is currently locked so changes cannot be made.")
             return
             
         menu = tk.Menu(self, tearoff=0, bg="#2a2a35", fg="#ffffff", activebackground="#007bff", font=("Segoe UI", 11))
@@ -291,7 +291,7 @@ class MindMapApp(ctk.CTk):
         if file_path:
             with open(file_path, "w") as f:
                 json.dump(full_project_data, f, indent=4)
-            messagebox.showinfo("Saved", f'"{self.current_project_name}" සාර්ථකව සුරැකින ලදී! 💾')
+            messagebox.showinfo("Saved", f'"{self.current_project_name}"  Saved successfully!')
 
     def open_project(self):
         file_path = filedialog.askopenfilename(filetypes=[("Mind Map Project", "*.json")])
@@ -321,10 +321,10 @@ class MindMapApp(ctk.CTk):
 
         self.is_locked = False
         self.lock_switch.deselect()
-        messagebox.showinfo("Loaded", f'"{self.current_project_name}" සාර්ථකව විවෘත කරන ලදී! 📂')
+        messagebox.showinfo("Loaded", f'"{self.current_project_name}" Opened successfully! ')
 
     def generate_pillow_image(self):
-        # සේව් කරද්දී සිතියමේ සැබෑ සීමාවන් බලා Pillow image එකක් සෑදීම
+        
         width = max(self.canvas.winfo_width(), 1200)
         height = max(self.canvas.winfo_height(), 800)
         img = Image.new("RGB", (width, height), "#1e1e24")
